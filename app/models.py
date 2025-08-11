@@ -1,37 +1,30 @@
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Enum
+# app/models.py
+from sqlalchemy import Column, Integer, String, Text, Boolean, ForeignKey, DateTime, func
 from sqlalchemy.orm import relationship
-from datetime import datetime
-from app.deps import Base
-import enum
-
-class StatusEnum(str, enum.Enum):
-    to_do = "to_do"
-    in_progress = "in_progress"
-    done = "done"
-
-class PriorityEnum(str, enum.Enum):
-    low = "low"
-    medium = "medium"
-    high = "high"
+from app.database import Base
 
 class User(Base):
     __tablename__ = "users"
-    id = Column(Integer, primary_key=True, index=True)
-    username = Column(String, unique=True, index=True)
-    email = Column(String, unique=True, index=True)
-    password_hash = Column(String)
-    created_at = Column(DateTime, default=datetime.utcnow)
 
-    tasks = relationship("Task", back_populates="owner")
+    id = Column(Integer, primary_key=True, index=True)
+    username = Column(String(50), unique=True, index=True, nullable=False)
+    email = Column(String(100), unique=True, index=True, nullable=False)
+    password = Column(String(255), nullable=False)  # hashed password
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+    # Relasi ke Task
+    tasks = relationship("Task", back_populates="owner", cascade="all, delete-orphan")
+
 
 class Task(Base):
     __tablename__ = "tasks"
-    id = Column(Integer, primary_key=True, index=True)
-    title = Column(String, index=True)
-    description = Column(String)
-    status = Column(Enum(StatusEnum), default=StatusEnum.to_do)
-    priority = Column(Enum(PriorityEnum), default=PriorityEnum.medium)
-    due_date = Column(DateTime, nullable=True)
-    user_id = Column(Integer, ForeignKey("users.id"))
 
+    id = Column(Integer, primary_key=True, index=True)
+    title = Column(String(255), nullable=False)
+    description = Column(Text, nullable=True)
+    is_completed = Column(Boolean, default=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+    # Relasi ke User
+    owner_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"))
     owner = relationship("User", back_populates="tasks")

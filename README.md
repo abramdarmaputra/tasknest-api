@@ -1,13 +1,23 @@
 # TaskNest API
 
-API service untuk pengelolaan tugas berbasis FastAPI dan PostgreSQL.
+API Service untuk pengelolaan tugas (Task Management) menggunakan **FastAPI** dan **PostgreSQL**.
 
-## Fitur
-- CRUD Task
-- Manajemen User
-- Integrasi PostgreSQL dengan SQLAlchemy dan Alembic
+## 1. Persiapan Awal
 
-## Cara Menjalankan
-1. Clone repository
-2. Install dependencies
-3. Jalankan server dengan Uvicorn
+### Install Python
+- Download: https://www.python.org/downloads/
+- Centang **"Add Python to PATH"** saat instalasi.
+
+### Install PostgreSQL
+- Download: https://www.postgresql.org/download/
+- Ikuti wizard instalasi, catat:
+  - **Username** (default: `postgres`)
+  - **Password**
+  - **Port** (default: `5432`)
+
+---
+
+## 2. Clone Repository
+```bash
+git clone https://github.com/abramdarmaputra/tasknest-api.git
+cd tasknest-api
